@@ -1,0 +1,12 @@
+app:
+  port: ':3001'
+  well_similarity_percent: 50
+  expiration_cookie_time: 1382400
+
+logs:
+  path: './'
+  name: 'api'
+  max_size: 5
+  max_backups: 10
+  max_age: 30
+  rotate_check_interval: 60s
