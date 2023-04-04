@@ -4,6 +4,8 @@ import (
 	"dvigus_task/config"
 	"dvigus_task/internal/pkg/logger"
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/spf13/viper"
@@ -22,17 +24,43 @@ func SetConfig() {
 		log.Fatal(err)
 	}
 	App = config.AppConfig{
-		Port:                  viper.GetString("app.port"),
-		WellSimilarityPercent: viper.GetInt("app.well_similarity_percent"),
-		ExpirationCookieTime:  viper.GetDuration("app.expiration_cookie_time"),
+		Port: viper.GetString("app.port"),
 	}
 
 	RateLimit = config.RateLimitConfig{
 		Period:      time.Second * 20,
 		MaxRequests: 5,
 		Cooldown:    time.Second * 5,
-		Status:      true,
 		MaskSize:    24,
+	}
+
+	cooldownStr := os.Getenv("COOLDOWN")
+	if cooldownStr != "" {
+		cl, err := strconv.Atoi(cooldownStr)
+		if err == nil {
+			RateLimit.Cooldown = time.Second * time.Duration(cl)
+		}
+	}
+	periodStr := os.Getenv("PERIOD")
+	if periodStr != "" {
+		p, err := strconv.Atoi(periodStr)
+		if err == nil {
+			RateLimit.Period = time.Second * time.Duration(p)
+		}
+	}
+	maxRequestsStr := os.Getenv("MAX_REQ")
+	if maxRequestsStr != "" {
+		mxReq, err := strconv.Atoi(maxRequestsStr)
+		if err == nil {
+			RateLimit.MaxRequests = mxReq
+		}
+	}
+	maskSizeStr := os.Getenv("MASK_SIZE")
+	if maskSizeStr != "" {
+		m, err := strconv.Atoi(maskSizeStr)
+		if err == nil {
+			RateLimit.MaskSize = m
+		}
 	}
 
 	Logger = logger.Config{

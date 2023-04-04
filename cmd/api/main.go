@@ -3,10 +3,9 @@ package main
 import (
 	"dvigus_task/config/api_config"
 
+	admin_delivery "dvigus_task/internal/admin/delivery"
 	"dvigus_task/internal/pkg/logger"
 	middleware "dvigus_task/internal/pkg/middlewares"
-	user_delivery "dvigus_task/internal/users/delivery"
-	user_usecase "dvigus_task/internal/users/usecase"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -21,15 +20,12 @@ func main() {
 	// router
 	router := mux.NewRouter()
 
-	// usecase
-	uu := user_usecase.NewUserUsecase(logger)
-
 	// middlewars
 	loggerMw := middleware.LoggerMiddleware{Logger: logger}
-	rateLimitsMw := middleware.RateLimitMiddleware{Repo: make(map[string]middleware.RateByIP)}
+	rateLimitsMw := middleware.RateLimitMiddleware{}
 
 	// delivery
-	user_delivery.SetUserRouting(router, uu, &loggerMw, &rateLimitsMw, logger)
+	admin_delivery.SetAdminRouting(router, &loggerMw, &rateLimitsMw, logger)
 
 	srv := &http.Server{
 		Handler:      router,

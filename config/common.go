@@ -5,16 +5,13 @@ import (
 )
 
 type AppConfig struct {
-	Port                  string
-	WellSimilarityPercent int
-	ExpirationCookieTime  time.Duration
+	Port string
 }
 
 type RateLimitConfig struct {
 	Period      time.Duration
 	MaxRequests int
 	Cooldown    time.Duration
-	Status      bool
 	MaskSize    int
 }
 
