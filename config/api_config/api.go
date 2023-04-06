@@ -17,23 +17,27 @@ var (
 	Logger    logger.Config
 )
 
-func SetConfig() {
-	viper.SetConfigFile("api_config.yaml")
+func SetConfig(filename string) {
+	// выставляем кофинг файл
+	viper.SetConfigFile(filename)
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
+	// чтение порта из конфиг файла
 	App = config.AppConfig{
 		Port: viper.GetString("app.port"),
 	}
 
+	// выставляем дефолтные значения частоты запросов
 	RateLimit = config.RateLimitConfig{
 		Period:      time.Second * 20,
 		MaxRequests: 5,
-		Cooldown:    time.Second * 5,
+		Cooldown:    time.Second * 10,
 		MaskSize:    24,
 	}
 
+	// если есть данные в переменных окружения, выставляем их
 	cooldownStr := os.Getenv("COOLDOWN")
 	if cooldownStr != "" {
 		cl, err := strconv.Atoi(cooldownStr)
@@ -63,6 +67,7 @@ func SetConfig() {
 		}
 	}
 
+	// выставляем конфиг лога из конфиг файла
 	Logger = logger.Config{
 		Path:                viper.GetString("logs.path"),
 		Name:                viper.GetString("logs.name"),

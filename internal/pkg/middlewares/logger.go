@@ -15,8 +15,10 @@ type LoggerMiddleware struct {
 func (lm LoggerMiddleware) WithLogging(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log := lm.Logger.WithFields(logrus.Fields{
-			"url":    r.URL,
+			"url":    r.URL.String(),
 			"method": r.Method,
+			"host":   r.Host,
+			"body":   r.Body,
 		})
 
 		log.Infof("Start request")

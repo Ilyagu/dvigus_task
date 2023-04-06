@@ -6,8 +6,9 @@ import (
 )
 
 type RateByIP struct {
-	Count int
-	Time  time.Time
+	Count   int
+	Time    time.Time
+	TurnOff bool
 }
 
 var (

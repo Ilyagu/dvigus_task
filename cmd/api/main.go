@@ -12,7 +12,8 @@ import (
 )
 
 func main() {
-	api_config.SetConfig()
+	// выставляем конфиг файл
+	api_config.SetConfig("api_config.yaml")
 
 	// logger
 	logger := logger.NewLogger(api_config.Logger)
